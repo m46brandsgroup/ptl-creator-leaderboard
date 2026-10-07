@@ -635,7 +635,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cell(
       "live",
       element(
-        `creators-table-box-count bg-font${isPnlPositive ? " active" : ""}`,
+        `creators-table-box-count bg-font${pnl < 0 ? " negative" : isPnlPositive ? " active" : ""}`,
         pnlFormatted,
       ),
     );
