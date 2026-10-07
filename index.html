@@ -1,0 +1,779 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link
+      href="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/css/premier-trading-league.webflow.shared.895f80eb5.css"
+      rel="stylesheet"
+      type="text/css"
+      integrity="sha384-iV+A61oBrm26BwFN12BcEKw2lD/31yZQhAqcITU/ZA7v2syUSr0MyoyMiMyRJq5M"
+      crossorigin="anonymous"
+    />
+    <link href="https://fonts.googleapis.com/" rel="preconnect" />
+    <link
+      href="https://fonts.gstatic.com/"
+      rel="preconnect"
+      crossorigin="anonymous"
+    />
+    <style>
+      :root,
+      html,
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      :root,
+      html,
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-feature-settings:
+          "tnum" on,
+          "lnum" on,
+          "ss01" on,
+          "ss03" on,
+          "ss05" on,
+          "ss06" on;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-feature-settings:
+          "tnum" on,
+          "lnum" on,
+          "ss06" on,
+          "ss05" on,
+          "ss03" on;
+      }
+
+      table {
+        margin: 20px 0 20px;
+        width: 100%;
+      }
+
+      table td,
+      table th {
+        padding: 8px;
+        border: 1px solid #ccc;
+      }
+
+      .advance-trader-table-body
+        > .advance-trader-table-rw:last-child
+        .advance-trader-table-td,
+      .advance-trader-table-body
+        .top-four-wrppr
+        > .advance-trader-table-rw:last-child
+        .advance-trader-table-td {
+        border-bottom: none;
+      }
+
+      .accordion_content {
+        grid-template-rows: 0fr;
+      }
+
+      .accordion_item.open .accordion_content {
+        grid-template-rows: 1fr;
+      }
+
+      .ptl-header-main {
+        position: fixed;
+      }
+
+      @media (max-width: 992px) {
+        /* PTL page */
+        .ptl-header-nav.add {
+          transform: translate(0);
+        }
+
+        body.open-nav {
+          overflow: hidden;
+        }
+
+        .ptl-navbar-overlay.open {
+          background-color: rgba(0, 0, 0, 0.4);
+          pointer-events: all;
+          -webkit-transition: background-color 0.5s linear;
+          -o-transition: background-color 0.5s linear;
+          transition: background-color 0.5s linear;
+        }
+      }
+    </style>
+    <style>
+      .tdfy-style-btn {
+        --theme-color: #00ff51;
+      }
+
+      .tdfy-style-btn[data-wf--tdfy-glow-button--variant="red"],
+      .tdfy-style-btn.red {
+        --theme-color: #d20909;
+      }
+
+      .tdfy-style-btn[data-wf--tdfy-glow-button--variant="orange"],
+      .tdfy-style-btn.orange {
+        --theme-color: #ff842a;
+      }
+
+      .tdfy-style-btn .tdfy-style-outer-border {
+        border-color: var(--theme-color);
+      }
+
+      .tdfy-style-absolute-glow {
+        background-image: radial-gradient(
+          circle farthest-corner at 50% 50%,
+          var(--theme-color) 5%,
+          var(--theme-color) 50%,
+          transparent
+        );
+      }
+
+      .tdfy-style-btn > * {
+        pointer-events: none;
+      }
+
+      .tdfy-style-border:after {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        border-radius: 12px;
+        left: 0px;
+        top: 0px;
+        z-index: 20;
+        filter: blur(6px);
+        background:
+          linear-gradient(transparent, transparent) padding-box,
+          linear-gradient(
+              90deg,
+              rgb(175 255 100 / 6%) 44.45%,
+              var(--theme-color) 98.59%
+            )
+            border-box;
+      }
+
+      .tdfy-style-border-right {
+        transform: translate(-50%, -50%) scaleX(1) scaleY(1);
+      }
+
+      .tdfy-style-border-left {
+        transform: translate(-50%, -50%) scaleX(-1) scaleY(-1);
+      }
+
+      .tdfy-style-border-light {
+        background:
+          linear-gradient(transparent, transparent) padding-box,
+          linear-gradient(
+              90deg,
+              rgb(153 188 143 / 10%) 44.66%,
+              rgb(134 233 99 / 10%) 58.55%,
+              var(--theme-color) 100%
+            )
+            border-box;
+      }
+    </style>
+    <style>
+      .tdfy-style-absolute-glow {
+        opacity: 0;
+      }
+
+      .glow-menu {
+        opacity: 0;
+      }
+
+      .w-nav-link.w--current {
+        color: var(--green-500);
+      }
+
+      .w-nav-link.w--current + .glow-menu {
+        opacity: 1;
+      }
+
+      .coockie-popup-main {
+        position: fixed;
+        display: none;
+      }
+
+      .footer-richtext p:last-child {
+        margin-bottom: 0;
+      }
+
+      .faq-arrow-icon,
+      .faq-arrow-icon img {
+        transition: all 300ms ease-in-out;
+      }
+
+      .active-header .faq-arrow {
+        transform: rotate(180deg);
+      }
+
+      .faq-content {
+        display: none;
+      }
+
+      .tdfy_pop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        display: flex;
+        padding: 30px;
+        opacity: 0;
+        visibility: hidden;
+        flex-direction: initial;
+        transition: all 300ms ease-in-out;
+      }
+
+      .tdfy_pop.showModal {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .pop_post_form {
+        display: none;
+      }
+
+      .page_popup {
+        transition: all 300ms ease-in-out;
+      }
+
+      .w-embed .common-text {
+        overflow-x: auto;
+      }
+
+      .push-popup-html .pyout-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 100;
+        overflow-y: auto;
+        padding: 120px 0 50px;
+      }
+
+      .pyout-popup {
+        display: none;
+      }
+
+      body.popup-open {
+        overflow: hidden;
+      }
+
+      .nav-ul .nav-li:first-child {
+        margin-left: 0;
+      }
+
+      .nav-ul .nav-li:last-child {
+        margin-right: 0;
+      }
+
+      .tdfy-style-btn.type-input input[type="submit"] {
+        pointer-events: all;
+      }
+      .line_glow1,
+      .line_glow2 {
+        offset-path: rect(0% auto 100% auto);
+        filter: blur(4px);
+      }
+      .line_glow1 {
+        animation: line_glow1 5s linear infinite;
+        offset-distance: 0%;
+      }
+
+      .line_glow2 {
+        animation: line_glow2 5s linear infinite;
+        offset-distance: 50%;
+        opacity: 0;
+      }
+
+      @keyframes line_glow1 {
+        0% {
+          offset-distance: 0%;
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          offset-distance: 50%;
+          opacity: 0;
+        }
+      }
+      @keyframes line_glow2 {
+        0% {
+          offset-distance: 50%;
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          offset-distance: 100%;
+          opacity: 0;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 399px) {
+        .faq-para.home-v2-faq-para.home-v1 {
+          font-size: 14px;
+        }
+
+        .strategy-head.home-v1-new-strategy-head,
+        .home-v1-before-ftr-head {
+          font-size: 26px;
+        }
+
+        .ftr-col.ftrcol1.home-new-v1 {
+          margin-bottom: 70px;
+        }
+
+        .fnav-link.home-new-v1,
+        .ftitle.home-new-v1 {
+          font-size: 14px;
+        }
+
+        .ftr-logo {
+          max-width: 140px;
+        }
+
+        .footer-richtext.home-new-v1 {
+          font-size: 12px;
+        }
+      }
+      @media (max-width: 374px) {
+        .ptl-header-link {
+          max-width: 80px;
+        }
+        .tdfy-style-text.nvm.ptl-btn-txt {
+          font-size: 12px;
+        }
+        .ptl-menu-btn.menu-open-btn {
+          width: 30px;
+          padding: 3px;
+        }
+        .grand-cap-price.cup-v2.ptl-prz-num.bg-txt {
+          font-size: 20px;
+        }
+        .prize-txt {
+          font-size: 10px;
+        }
+        .prize-pool-card-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .prize-pool-head-left {
+          margin-right: 0;
+          margin-bottom: 8px;
+        }
+        .hlw-pool-title {
+          font-size: 40px;
+        }
+        .ptl-header-wrp {
+          padding: 8px 16px;
+        }
+      }
+    </style>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
+    <script src="custom.js"></script>
+  </head>
+  <body>
+    <section class="milestn-sec-main">
+      <div class="w-layout-blockcontainer container w-container">
+        <div class="milestn-main-wrp">
+          <div class="milestn-head-wrp">
+            <div class="milestn-head-top">
+              <div class="milestn-head-top-row">
+                <div class="milestn-head-top-col first">
+                  <div class="milestn-head-top-card">
+                    <img
+                      src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac625145c98518a6a80fdfa_Group%202147225352.png"
+                      loading="lazy"
+                      alt=""
+                      class="milestn-head-top-card-img"
+                    />
+                    <div class="cc-img-wrapper left">
+                      <div class="cc-img-wrapper-inner user1">
+                        <img
+                          src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6aabc180b50f16dab6b4c29c_atreezy.webp"
+                          loading="lazy"
+                          alt=""
+                          class="cc-img-prof"
+                        /><img
+                          src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac6248072b8e443ec4ba0c0_Group%202147225367.png"
+                          loading="lazy"
+                          alt=""
+                          class="cc-shadow"
+                        />
+                        <div class="cc-usr-name"><div>Nemo</div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="milestn-head-top-col scnd">
+                  <div class="milestn-head-top-card">
+                    <img
+                      src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac62517f92fa23d4ca264d1_Group%202147225358.png"
+                      loading="lazy"
+                      alt=""
+                      class="milestn-head-top-card-img"
+                    />
+                  </div>
+                </div>
+                <div class="milestn-head-top-col third">
+                  <div class="milestn-head-top-card">
+                    <img
+                      src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac6251113576799c6a251b9_Group%202147225356.png"
+                      loading="lazy"
+                      alt=""
+                      class="milestn-head-top-card-img"
+                    />
+                    <div class="cc-img-wrapper right">
+                      <div class="cc-img-wrapper-inner user2">
+                        <img
+                          src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6aae1d61b5558e4668ca5944_qojqva-pic.webp"
+                          loading="lazy"
+                          alt=""
+                          class="cc-img-prof"
+                        /><img
+                          src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac6247a25879a804ea08482_Group%202147225366.png"
+                          loading="lazy"
+                          alt=""
+                          class="cc-shadow"
+                        />
+                        <div class="cc-usr-name"><div>Nemo</div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="miln-header">
+              <div class="ptl-cmn-head text-center back-ptl-cmn-head">
+                <h2 class="ptl-cmn-h2-new btm">
+                  Company Milestones for Open 1
+                </h2>
+                <div class="ptl-sub-head-wrp ccb">
+                  <p class="ptl-cmn-sub-head md">
+                    Every trader contributes points to the company total during
+                    each Open. Reaching a milestone marks progress; rewards are
+                    awarded after that Open ends. Open 2 starts at zero.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="milestn-step-main">
+            <div class="milestn-step-bg"></div>
+            <div class="milestn-step-inner">
+              <div class="milestn-step-row">
+                <div class="milestn-step-each-items active">
+                  <div class="milestn-step-card">
+                    <div class="milestn-step-card-top">
+                      <img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5e774fb63b8048001bc2f_champ-img-01.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-card-img"
+                      /><img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac60367a9e355b0e3313805_champ-img-01-inact.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-card-img-inact"
+                      /><img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5ecfe4aa5883319cc2892_champ-step-act-glow.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-active"
+                      />
+                    </div>
+                    <div class="milestn-step-block">
+                      <div class="milestn-step-txt-yell">3,700 pts</div>
+                      <h3 class="milestn-step-txt-head">Lemonade Stand</h3>
+                      <div class="milestn-step-txt-grn">Tier reached</div>
+                    </div>
+                  </div>
+                  <div class="milestn-step-line rgt"></div>
+                  <div class="milestn-step-line left"></div>
+                </div>
+                <div class="milestn-step-each-items inactive">
+                  <div class="milestn-step-card">
+                    <div class="milestn-step-card-top">
+                      <img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5e77430eb71dead432d32_champ-img-02.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-card-img"
+                      /><img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac60368220fcdb0d9817219_champ-img-02-inact.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-card-img-inact"
+                      /><img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5ecfe4aa5883319cc2892_champ-step-act-glow.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-active"
+                      />
+                    </div>
+                    <div class="milestn-step-block">
+                      <div class="milestn-step-txt-yell">4,500 pts</div>
+                      <h3 class="milestn-step-txt-head">Start Up</h3>
+                      <div class="milestn-step-txt-grn">Tier reached</div>
+                    </div>
+                  </div>
+                  <div class="milestn-step-line rgt"></div>
+                  <div class="milestn-step-line left"></div>
+                </div>
+                <div class="milestn-step-each-items inactive">
+                  <div class="milestn-step-card">
+                    <div class="milestn-step-card-top">
+                      <img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5e774098f85fba6ca6616_champ-img-03.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-card-img"
+                      /><img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac60367074378f84a2aef6e_champ-img-03-inact.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-card-img-inact"
+                      /><img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5ecfe4aa5883319cc2892_champ-step-act-glow.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-active"
+                      />
+                    </div>
+                    <div class="milestn-step-block">
+                      <div class="milestn-step-txt-yell">5,200 pts</div>
+                      <h3 class="milestn-step-txt-head">Corporation</h3>
+                      <div class="milestn-step-txt-grn">Tier reached</div>
+                    </div>
+                  </div>
+                  <div class="milestn-step-line rgt"></div>
+                  <div class="milestn-step-line left"></div>
+                </div>
+                <div class="milestn-step-each-items inactive">
+                  <div class="milestn-step-card">
+                    <div class="milestn-step-card-top">
+                      <img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5e7754fdef7bc6e4e87cf_champ-img-04.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-card-img"
+                      /><img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac60367c9b734cbe3e7a389_champ-img-04-inact.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-card-img-inact"
+                      /><img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5ecfe4aa5883319cc2892_champ-step-act-glow.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-active"
+                      />
+                    </div>
+                    <div class="milestn-step-block">
+                      <div class="milestn-step-txt-yell">7,800 pts</div>
+                      <h3 class="milestn-step-txt-head">Monopoly</h3>
+                      <div class="milestn-step-txt-grn">
+                        Banks all fore tiers
+                      </div>
+                    </div>
+                  </div>
+                  <div class="milestn-step-line rgt"></div>
+                  <div class="milestn-step-line left"></div>
+                </div>
+              </div>
+              <div class="milestn-step-ftr">
+                <div class="milestn-step-ftr-top">
+                  <div class="milestn-step-ftr-head-txt">
+                    Next up: The grind
+                  </div>
+                  <div class="milestn-step-count">
+                    6,100 / 7,800 company pts · 1,700 to go
+                  </div>
+                </div>
+                <div class="milestn-step-prgs">
+                  <div class="milestn-step-prgs-count" style="width: 25%">
+                    <div class="milestn-step-prgs-crcl">
+                      <img
+                        src="https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6ac5f34fc2005ca1235f0534_champ-step-crcl-lyr.png"
+                        loading="lazy"
+                        alt=""
+                        class="milestn-step-prgs-crcl-lyr"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="w-embed">
+              <style>
+                .milestn-step-each-items:first-child .milestn-step-line.left {
+                  display: none;
+                }
+                .milestn-step-each-items:last-child .milestn-step-line.rgt {
+                  display: none;
+                }
+                .milestn-step-each-items.active.glow .milestn-step-active {
+                  transform: translate(-50%, -50%) scale(1);
+                }
+                .milestn-step-each-items.active .milestn-step-txt-head {
+                  color: #ffe097;
+                }
+                .milestn-step-each-items.active .milestn-step-txt-grn {
+                  color: #fbc64b;
+                }
+                .milestn-step-card-img-inact,
+                .milestn-step-card-img {
+                  transition: opacity 0.5s ease-in;
+                }
+                .milestn-step-card-img-inact {
+                  opacity: 1;
+                  display: block;
+                }
+                .milestn-step-card-img {
+                  opacity: 0;
+                  display: block;
+                }
+                .milestn-step-each-items.active .milestn-step-card-img {
+                  opacity: 1;
+                  z-index: 2;
+                }
+              </style>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="creators-sec-main ptl-cmn-gap">
+      <div class="golden-yllw-line top"></div>
+      <div class="w-layout-blockcontainer container w-container">
+        <div class="creators-main-wrp">
+          <div class="ptl-cmn-head text-center back-ptl-cmn-head">
+            <h2 class="ptl-cmn-h2-new">
+              The race to the Creators League Final
+            </h2>
+            <div class="ptl-sub-head-wrp creators-ptl-sub-head-wrp">
+              <p class="ptl-cmn-sub-head">
+                The top eight creators qualify for the live final. Follow
+                itsKatchii’s position and see which reward pack her team is
+                currently on track to unlock.
+              </p>
+            </div>
+          </div>
+          <div class="creators-table-main">
+            <div class="creators-table">
+              <div class="creators-table-head">
+                <div class="creators-table-row">
+                  <div class="creators-table-col rank">
+                    <div class="creators-table-box head">
+                      <div class="creators-table-box-txt">Rank</div>
+                    </div>
+                  </div>
+                  <div class="creators-table-col creators">
+                    <div class="creators-table-box head">
+                      <div class="creators-table-box-txt">Creator</div>
+                    </div>
+                  </div>
+                  <div class="creators-table-col points">
+                    <div class="creators-table-box head">
+                      <div class="creators-table-box-txt">Points</div>
+                    </div>
+                  </div>
+                  <div class="creators-table-col matches">
+                    <div class="creators-table-box head">
+                      <div class="creators-table-box-txt">Matches</div>
+                    </div>
+                  </div>
+                  <div class="creators-table-col live">
+                    <div class="creators-table-box head">
+                      <div class="creators-table-box-txt">Live P&amp;L</div>
+                    </div>
+                  </div>
+                  <div class="creators-table-col reward">
+                    <div class="creators-table-box head last">
+                      <div class="creators-table-box-txt">Reward</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="creators-table-body" class="creators-table-body">
+                <div class="creators-table-box-count creators-table-loader">
+                  <div>Loading creators…</div>
+                </div>
+                <div class="creators-table-box-count creators-table-error">
+                  <div>No creators available.</div>
+                </div>
+                <div id="creators-table-body" class="table-data-hidden">
+                  <div class="creators-table-row">
+                    <div class="creators-table-col rank">
+                      <div class="creators-table-box">
+                        <div class="creators-table-box-rank">16</div>
+                      </div>
+                    </div>
+                    <div class="creators-table-col creators">
+                      <div class="creators-table-box">
+                        <div class="creators-table-box-txt">@DoubleLift</div>
+                        <div class="creators-table-box-count">
+                          12,480 supporters
+                        </div>
+                      </div>
+                    </div>
+                    <div class="creators-table-col points">
+                      <div class="creators-table-box">
+                        <div class="creators-table-box-count bg-font">
+                          482 pts
+                        </div>
+                      </div>
+                    </div>
+                    <div class="creators-table-col matches">
+                      <div class="creators-table-box">
+                        <div class="creators-table-box-count bg-font">
+                          $212,500
+                        </div>
+                      </div>
+                    </div>
+                    <div class="creators-table-col live">
+                      <div class="creators-table-box">
+                        <div class="creators-table-box-count bg-font">
+                          $25,000
+                        </div>
+                      </div>
+                    </div>
+                    <div class="creators-table-col reward">
+                      <div class="creators-table-box last">
+                        <div class="creators-table-box-count bg-font">
+                          $90,000
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
