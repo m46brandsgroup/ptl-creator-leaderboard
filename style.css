@@ -1,95 +1,95 @@
 .creators-table-col.creators .creators-table-box-count {
-    display: none;
-  }
-  .creators-table-col.live {
-    text-align: center;
-  }
-  .creators-table-col.reward {
-    width: 25%;
-    text-align: center;
-  }
-  .creators-table-tag {
-    max-width: 100%;
-  }
-  .table-data-hidden {
-    display: none;
-  }
-  .creators-table-box-count.creators-table-error {
-    display: none;
-  }
+  display: none;
+}
+.creators-table-col.live {
+  text-align: center;
+}
+.creators-table-col.reward {
+  width: 25%;
+  text-align: center;
+}
+.creators-table-tag {
+  max-width: 100%;
+}
+.table-data-hidden {
+  display: none;
+}
+.creators-table-box-count.creators-table-error {
+  display: none;
+}
 
-  .creators-table-body .creators-table-row:nth-child(odd) {
-    background-color: #050506;
-  }
-  .creators-table-row.runners-up {
-    background-color: rgba(253, 155, 0, 0.05) !important;
-  }
-  .creators-table-row._1st-prize {
-    background-color: rgba(253, 139, 0, 0.25) !important;
-  }
+.creators-table-body .creators-table-row:nth-child(odd) {
+  background-color: #050506;
+}
+.creators-table-row.runners-up {
+  background-color: rgba(253, 155, 0, 0.05) !important;
+}
+.creators-table-row._1st-prize {
+  background-color: rgba(253, 139, 0, 0.25) !important;
+}
 
-  @keyframes creators-table-spin {
-    to {
-      transform: rotate(360deg);
-    }
+@keyframes creators-table-spin {
+  to {
+    transform: rotate(360deg);
   }
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    .creators-table-loader::before {
-      animation: none;
-    }
-  }
+@media (prefers-reduced-motion: reduce) {
   .creators-table-loader::before {
-    content: '';
-    box-sizing: border-box;
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    border: 3px solid rgba(253, 155, 0, 0.2);
-    border-top-color: #fd9b00;
-    border-radius: 50%;
-    animation: creators-table-spin 0.8s linear infinite;
+    animation: none;
   }
+}
+.creators-table-loader::before {
+  content: "";
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 3px solid rgba(253, 155, 0, 0.2);
+  border-top-color: #fd9b00;
+  border-radius: 50%;
+  animation: creators-table-spin 0.8s linear infinite;
+}
 
-  .creators-table-refresh:hover:not(:disabled) {
-    background: rgba(103, 67, 15, 0.7);
-  }
+.creators-table-refresh:hover:not(:disabled) {
+  background: rgba(103, 67, 15, 0.7);
+}
 
-  .creators-table-refresh:focus-visible {
-    outline: 2px solid #fd9b00;
-    outline-offset: 3px;
-  }
+.creators-table-refresh:focus-visible {
+  outline: 2px solid #fd9b00;
+  outline-offset: 3px;
+}
 
-  .creators-table-refresh:disabled {
-    opacity: 0.5;
-    cursor: wait;
-  }
-  .creators-table-box-count.bg-font.negative {
-    color: #ff4d4f;
-  }
+.creators-table-refresh:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.creators-table-box-count.bg-font.negative {
+  color: #ff4d4f;
+}
 
-  .creators-table-col.rank {
-    order: 1;
-  }
-  .creators-table-col.creators {
-    order: 2;
-  }
+.creators-table-col.rank {
+  order: 1;
+}
+.creators-table-col.creators {
+  order: 2;
+}
 
-  .creators-table-col.points {
-    order: 3;
-  }
+.creators-table-col.points {
+  order: 3;
+}
 
-  .creators-table-col.live {
-    order: 4;
-  }
+.creators-table-col.live {
+  order: 4;
+}
 
-  .creators-table-col.matches {
-    order: 5;
-  }
+.creators-table-col.matches {
+  order: 5;
+}
 
-  .creators-table-col.reward {
-    order: 6;
-  }
+.creators-table-col.reward {
+  order: 6;
+}
 
 /* Activation is driven by the same animation frame as the progress width. */
 .milestn-step-prgs-count,
@@ -111,3 +111,5 @@
     transition: none;
   }
 }
+
+/*---end---*/

@@ -317,6 +317,93 @@ const creatorsTableConfig = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  const cards = Array.from(document.querySelectorAll(".milestn-step-each-items"));
+  let resizeFrame;
+
+  function sizeCards() {
+    // Release the previous height so cards can shrink at responsive breakpoints.
+    cards.forEach((card) => {
+      card.style.height = "0px";
+      card.querySelectorAll(":scope > .milestn-flip-inner > .front-face, :scope > .milestn-flip-inner > .back-face").forEach((face) => {
+        face.style.height = "auto";
+      });
+    });
+    const heights = cards.map((card) => Math.ceil(Math.max(
+      card.querySelector(".front-face")?.offsetHeight || 0,
+      card.querySelector(".back-face")?.offsetHeight || 0,
+    )));
+    cards.forEach((card, index) => {
+      const height = `${heights[index]}px`;
+      card.style.height = height;
+      card.querySelectorAll(":scope > .milestn-flip-inner > .front-face, :scope > .milestn-flip-inner > .back-face").forEach((face) => {
+        face.style.height = height;
+      });
+    });
+  }
+
+  function scheduleSize() {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(sizeCards);
+  }
+
+  cards.forEach((card) => {
+    const front = card.querySelector(".front-face");
+    const back = card.querySelector(".back-face");
+    if (!front || !back) return;
+    const title = card.querySelector(".milestn-step-txt-head")?.textContent.trim() || "Milestone";
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+
+    function flip(flipped) {
+      card.classList.toggle("is-flipped", flipped);
+      card.setAttribute("aria-pressed", String(flipped));
+      card.setAttribute("aria-label", `${title}: show ${flipped ? "front" : "back"}`);
+      front.setAttribute("aria-hidden", String(flipped));
+      back.setAttribute("aria-hidden", String(!flipped));
+      front.inert = flipped;
+      back.inert = !flipped;
+    }
+
+    flip(false);
+    card.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") flip(true);
+    });
+    card.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "mouse") flip(false);
+    });
+    card.addEventListener("click", () => flip(!card.classList.contains("is-flipped")));
+    card.addEventListener("keydown", (event) => {
+      if (event.target !== card) return;
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        flip(!card.classList.contains("is-flipped"));
+      } else if (event.key === "Escape") {
+        flip(false);
+      }
+    });
+    card.addEventListener("focusout", (event) => {
+      if (!card.contains(event.relatedTarget)) flip(false);
+    });
+    card.querySelectorAll("img").forEach((image) => {
+      image.addEventListener("load", scheduleSize);
+      image.addEventListener("error", scheduleSize);
+    });
+  });
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(scheduleSize);
+    cards.forEach((card) => {
+      const content = card.querySelector(".milestn-step-card");
+      if (content) observer.observe(content);
+    });
+  }
+  window.addEventListener("resize", scheduleSize);
+  window.addEventListener("load", scheduleSize);
+  document.fonts?.ready.then(scheduleSize);
+  sizeCards();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
   const tableBody = document.getElementById(creatorsTableConfig.tableBodyId);
   if (!tableBody) return;
   const refreshButton = document.getElementById(
@@ -399,8 +486,6 @@ document.addEventListener("DOMContentLoaded", () => {
     start: 0,
     elapsed: 0,
     hasData: false,
-    glowCard: null,
-    glowTimer: null,
   }));
 
   function animateMilestones(state) {
@@ -471,6 +556,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const targetThreshold = nextTierIndex === -1 ? monopolyThreshold : thresholds[nextTierIndex];
     const remainingPoints = Math.max(0, targetThreshold - totalPoints);
 
+    document.querySelectorAll(".milestn-step-txt-yell").forEach((yell, index) => {
+      const threshold = thresholds[index] ?? creatorMilestoneConfig.fallback_thresholds[index] ?? 0;
+      yell.textContent = `${numbers.format(threshold)} pts`;
+    });
+
     document.querySelectorAll(".milestn-step-ftr-head-txt").forEach((heading) => {
       heading.textContent = !creator
         ? "Milestones unavailable"
@@ -485,9 +575,6 @@ document.addEventListener("DOMContentLoaded", () => {
         : "Your points are not available yet.";
     });
 
-    const lastReachedIndex = thresholds.reduce((last, threshold, index) =>
-      creator && totalPoints >= threshold ? index : last, -1);
-
     milestoneAnimations.forEach((state) => {
       state.start = state.progress;
       state.elapsed = 0;
@@ -497,25 +584,12 @@ document.addEventListener("DOMContentLoaded", () => {
         state.section.querySelectorAll(".milestn-step-prgs-count").forEach((bar) => {
           bar.style.width = `${displayedProgress}%`;
         });
-        let lastActiveCard = null;
         state.section.querySelectorAll(".milestn-step-each-items").forEach((item, index) => {
           const reached = Boolean(creator) && totalPoints >= thresholds[index]
             && displayedProgress >= thresholds[index] / monopolyThreshold * 100;
           item.classList.toggle("active", reached);
           item.classList.toggle("inactive", !reached);
-          if (item !== state.glowCard || !reached) item.classList.remove("glow");
-          if (reached && index === lastReachedIndex) lastActiveCard = item;
         });
-        if (lastActiveCard !== state.glowCard) {
-          clearTimeout(state.glowTimer);
-          state.glowCard?.classList.remove("glow");
-          state.glowCard = lastActiveCard;
-          state.glowTimer = lastActiveCard ? setTimeout(() => {
-            if (state.glowCard === lastActiveCard && lastActiveCard.classList.contains("active")) {
-              lastActiveCard.classList.add("glow");
-            }
-          }, 500) : null;
-        }
       };
       state.render(state.progress);
       animateMilestones(state);
