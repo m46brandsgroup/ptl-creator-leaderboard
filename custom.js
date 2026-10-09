@@ -2,24 +2,24 @@
 const creatorMilestoneConfig = {
   tiers: ["lemonade stand", "start up", "corporation", "monopoly"],
   creator_thresholds: {
-    "itskatchii": [8562, 12033, 14115, 18049],
-    "penta": [4903, 6890, 8083, 10335],
-    "tminnzy": [5824, 8185, 9601, 12277],
-    "pikaboo irl": [2361, 3318, 3892, 4976],
-    "awake": [4355, 6120, 7180, 9181],
-    "nemo": [11015, 15480, 18160, 23221],
-    "esfandtv": [4407, 6193, 7265, 9290],
-    "coopertv": [4340, 6100, 7155, 9149],
-    "nagzz": [6083, 8549, 10028, 12823],
-    "frodan": [6812, 9573, 11230, 14360],
-    "varsitygaming": [6460, 9079, 10651, 13619],
-    "arteezy": [2631, 3697, 4337, 5546],
-    "thijs": [4007, 5632, 6606, 8447],
-    "juliakins": [4544, 6386, 7491, 9578],
-    "syanne": [5014, 7046, 8266, 10569],
-    "qojqva": [4477, 6292, 7381, 9438],
+    itskatchii: [20120.7, 28277.55, 33170.25, 42415.15],
+    penta: [11522.05, 16191.5, 18995.05, 24287.25],
+    tminnzy: [13686.4, 19234.75, 22562.35, 28850.95],
+    "pikaboo irl": [5548.35, 7797.3, 9146.2, 11693.6],
+    awake: [10234.25, 14382, 16873, 21575.35],
+    nemo: [25885.25, 36378, 42676, 54569.35],
+    esfandtv: [10356.45, 14553.55, 17072.75, 21831.5],
+    coopertv: [10199, 14335, 16814.25, 21500.15],
+    nagzz: [14295.05, 20090.15, 23565.8, 30134.05],
+    frodan: [16008.2, 22496.55, 26390.5, 33746],
+    varsitygaming: [15181, 21335.65, 25029.85, 32004.65],
+    arteezy: [6182.85, 8687.95, 10191.95, 13033.1],
+    thijs: [9416.45, 13235.2, 15524.1, 19850.45],
+    juliakins: [10678.4, 15007.1, 17603.85, 22508.3],
+    syanne: [11782.9, 16558.1, 19425.1, 24837.15],
+    qojqva: [10520.95, 14786.2, 17345.35, 22179.3],
   },
-  fallback_thresholds: [3700, 4500, 5200, 7800],
+  fallback_thresholds: [8695, 10575, 12220, 18330],
 };
 
 const staticMatchData = {
@@ -286,11 +286,17 @@ const staticMatchData = {
     },
   ],
 };
-
-
+ 
 /*-- part2 --*/
 const creatorsTableConfig = {
-  developerMode: true,
+  popup: {
+    developerMode: false,
+    enabled: true,
+    use_api: true,
+    leagueName: "Creator League",
+    fallbackImageUrl:
+      "https://cdn.prod.website-files.com/6a981ac8d7b7736a6a02b0a1/6a9939ae5de5151dfcda15f5_6a84628529744886a578d5b9_icon.png",
+  },
   user: "itskatchii",
   loaderDelayMs: 0,
   tableBodyId: "creators-table-body",
@@ -314,30 +320,50 @@ const creatorsTableConfig = {
   // Accepts a response object or an API URL such as "/api/leaderboard".
   api_endpoint:
     "https://api-f.tradeify.co/app/v1/journal/ptl/creator/leaderboard/public/",
+  detailsEndpoint:
+    "https://api-f.tradeify.co/app/v1/journal/ptl/creator/leaderboard/public/details/",
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  const cards = Array.from(document.querySelectorAll(".milestn-step-each-items"));
+  const cards = Array.from(
+    document.querySelectorAll(".milestn-step-each-items"),
+  );
   let resizeFrame;
 
   function sizeCards() {
     // Release the previous height so cards can shrink at responsive breakpoints.
     cards.forEach((card) => {
       card.style.height = "0px";
-      card.querySelectorAll(":scope > .milestn-flip-inner > .front-face, :scope > .milestn-flip-inner > .back-face").forEach((face) => {
-        face.style.height = "auto";
-      });
+      const backContent = card.querySelector(".back-face-inner");
+      if (backContent) backContent.style.height = "auto";
+      card
+        .querySelectorAll(
+          ":scope > .milestn-flip-inner > .front-face, :scope > .milestn-flip-inner > .back-face",
+        )
+        .forEach((face) => {
+          face.style.height = "auto";
+        });
     });
-    const heights = cards.map((card) => Math.ceil(Math.max(
-      card.querySelector(".front-face")?.offsetHeight || 0,
-      card.querySelector(".back-face")?.offsetHeight || 0,
-    )));
+    const heights = cards.map((card) =>
+      Math.ceil(
+        Math.max(
+          card.querySelector(".front-face")?.offsetHeight || 0,
+          card.querySelector(".back-face")?.offsetHeight || 0,
+        ),
+      ),
+    );
     cards.forEach((card, index) => {
       const height = `${heights[index]}px`;
       card.style.height = height;
-      card.querySelectorAll(":scope > .milestn-flip-inner > .front-face, :scope > .milestn-flip-inner > .back-face").forEach((face) => {
-        face.style.height = height;
-      });
+      const backContent = card.querySelector(".back-face-inner");
+      if (backContent) backContent.style.height = "100%";
+      card
+        .querySelectorAll(
+          ":scope > .milestn-flip-inner > .front-face, :scope > .milestn-flip-inner > .back-face",
+        )
+        .forEach((face) => {
+          face.style.height = height;
+        });
     });
   }
 
@@ -350,14 +376,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const front = card.querySelector(".front-face");
     const back = card.querySelector(".back-face");
     if (!front || !back) return;
-    const title = card.querySelector(".milestn-step-txt-head")?.textContent.trim() || "Milestone";
+    const title =
+      card.querySelector(".milestn-step-txt-head")?.textContent.trim() ||
+      "Milestone";
     card.tabIndex = 0;
     card.setAttribute("role", "button");
 
     function flip(flipped) {
       card.classList.toggle("is-flipped", flipped);
       card.setAttribute("aria-pressed", String(flipped));
-      card.setAttribute("aria-label", `${title}: show ${flipped ? "front" : "back"}`);
+      card.setAttribute(
+        "aria-label",
+        `${title}: show ${flipped ? "front" : "back"}`,
+      );
       front.setAttribute("aria-hidden", String(flipped));
       back.setAttribute("aria-hidden", String(!flipped));
       front.inert = flipped;
@@ -371,7 +402,9 @@ document.addEventListener("DOMContentLoaded", () => {
     card.addEventListener("pointerleave", (event) => {
       if (event.pointerType === "mouse") flip(false);
     });
-    card.addEventListener("click", () => flip(!card.classList.contains("is-flipped")));
+    card.addEventListener("click", () =>
+      flip(!card.classList.contains("is-flipped")),
+    );
     card.addEventListener("keydown", (event) => {
       if (event.target !== card) return;
       if (event.key === "Enter" || event.key === " ") {
@@ -395,6 +428,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cards.forEach((card) => {
       const content = card.querySelector(".milestn-step-card");
       if (content) observer.observe(content);
+      const backContent = card.querySelector(".bak-card-cc-wrp");
+      if (backContent) observer.observe(backContent);
     });
   }
   window.addEventListener("resize", scheduleSize);
@@ -435,6 +470,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Use the last non-empty segment, e.g. /creators/Nagzz/ → Nagzz.
     const username =
       window.location.pathname.split("/").filter(Boolean).pop() || "";
+    // A standalone preview has no creator slug. Keep production slugs authoritative.
+    if (!username || /^index\.html?$/i.test(username) || window.location.protocol === "file:") {
+      return normalizeUsername(creatorsTableConfig.user);
+    }
     try {
       return normalizeUsername(decodeURIComponent(username));
     } catch {
@@ -442,7 +481,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  const highlightedUser = getHighlightedUser();
+  const normalizeCreatorKey = (value) =>
+    normalizeUsername(value).replace(/[^a-z0-9]/g, "");
+  const requestedUser = getHighlightedUser();
+  const activeTeam = staticMatchData.teams.find((team) =>
+    [team.creator_key, team.creator_name, ...team.creator_aliases].some(
+      (alias) => normalizeCreatorKey(alias) === normalizeCreatorKey(requestedUser),
+    ),
+  );
+  const highlightedUser = normalizeUsername(activeTeam?.creator_name || requestedUser);
 
   function getCreatorName(creator) {
     return (
@@ -459,16 +506,23 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!profile) return;
 
     const creator = creators.find(
-      (item) => highlightedUser && normalizeUsername(getCreatorName(item)) === highlightedUser,
+      (item) =>
+        highlightedUser &&
+        normalizeCreatorKey(getCreatorName(item)) === normalizeCreatorKey(highlightedUser),
     );
     const name = profile.querySelector(".cc-usr-name>div");
     const image = profile.querySelector(".cc-img-prof");
-    if (name) name.textContent = creator ? getCreatorName(creator) : "Creator unavailable";
+    if (name)
+      name.textContent = creator
+        ? getCreatorName(creator)
+        : "Creator unavailable";
     if (image) {
       const imageUrl = creator?.image_url || creator?.company?.image_url;
       image.alt = creator ? getCreatorName(creator) : "";
       image.hidden = !imageUrl;
-      image.onerror = () => { image.hidden = true; };
+      image.onerror = () => {
+        image.hidden = true;
+      };
       if (imageUrl) image.src = imageUrl;
       else image.removeAttribute("src");
     }
@@ -476,29 +530,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateActiveProfile([]);
 
-  const milestoneAnimations = Array.from(document.querySelectorAll(".milestn-step-main"), (section) => ({
-    section,
-    visible: false,
-    frame: null,
-    progress: 0,
-    render: null,
-    target: 0,
-    start: 0,
-    elapsed: 0,
-    hasData: false,
-  }));
+  const milestoneAnimations = Array.from(
+    document.querySelectorAll(".milestn-step-main"),
+    (section) => ({
+      section,
+      visible: false,
+      frame: null,
+      progress: 0,
+      render: null,
+      target: 0,
+      start: 0,
+      elapsed: 0,
+      hasData: false,
+    }),
+  );
 
   function animateMilestones(state) {
     cancelAnimationFrame(state.frame);
     if (!state.visible || !state.render || !state.hasData) return;
     const start = state.start;
     const target = state.target;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const animationDurationMs = 3000;
     const staggerDelayMs = 280;
     const startedAt = performance.now() - state.elapsed;
     function tick(now) {
-      state.elapsed = reducedMotion ? animationDurationMs : Math.min(animationDurationMs, now - startedAt);
+      state.elapsed = reducedMotion
+        ? animationDurationMs
+        : Math.min(animationDurationMs, now - startedAt);
       const elapsed = state.elapsed / animationDurationMs;
       const eased = 1 - Math.pow(1 - elapsed, 3);
       state.progress = start + (target - start) * eased;
@@ -506,8 +567,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const cards = state.section.querySelectorAll(".milestn-step-each-items");
       cards.forEach((card, index) => {
         const delay = index * staggerDelayMs;
-        const duration = Math.max(1, animationDurationMs - (cards.length - 1) * staggerDelayMs);
-        const fraction = reducedMotion ? 1 : Math.min(1, Math.max(0, (state.elapsed - delay) / duration));
+        const duration = Math.max(
+          1,
+          animationDurationMs - (cards.length - 1) * staggerDelayMs,
+        );
+        const fraction = reducedMotion
+          ? 1
+          : Math.min(1, Math.max(0, (state.elapsed - delay) / duration));
         const reveal = 1 - Math.pow(1 - fraction, 3);
         card.style.opacity = reveal;
       });
@@ -520,54 +586,85 @@ document.addEventListener("DOMContentLoaded", () => {
     milestoneAnimations.forEach(({ section }) => {
       section.classList.add("milestone-stagger-ready");
     });
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const state = milestoneAnimations.find((item) => item.section === entry.target);
-        state.visible = entry.isIntersecting;
-        if (state.visible) animateMilestones(state);
-        else cancelAnimationFrame(state.frame);
-      });
-    }, { threshold: 0.15 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const state = milestoneAnimations.find(
+            (item) => item.section === entry.target,
+          );
+          state.visible = entry.isIntersecting;
+          if (state.visible) animateMilestones(state);
+          else cancelAnimationFrame(state.frame);
+        });
+      },
+      { threshold: 0.15 },
+    );
     milestoneAnimations.forEach((state) => observer.observe(state.section));
   } else {
-    milestoneAnimations.forEach((state) => { state.visible = true; });
+    milestoneAnimations.forEach((state) => {
+      state.visible = true;
+    });
   }
 
   function updateMilestoneProgress(creators) {
-    const normalizeKey = (value) => normalizeUsername(value).replace(/[^a-z0-9]/g, "");
+    const normalizeKey = (value) =>
+      normalizeUsername(value).replace(/[^a-z0-9]/g, "");
     const userKey = normalizeKey(highlightedUser);
-    const team = staticMatchData.teams.find((item) =>
-      userKey && [item.creator_key, item.creator_name, ...item.creator_aliases]
-        .some((alias) => normalizeKey(alias) === userKey),
+    const team = staticMatchData.teams.find(
+      (item) =>
+        userKey &&
+        [item.creator_key, item.creator_name, ...item.creator_aliases].some(
+          (alias) => normalizeKey(alias) === userKey,
+        ),
     );
     const userKeys = new Set(
       [highlightedUser, team?.creator_name, ...(team?.creator_aliases || [])]
-        .filter(Boolean).map(normalizeKey),
+        .filter(Boolean)
+        .map(normalizeKey),
     );
-    const creator = creators.find((item) => userKeys.has(normalizeKey(getCreatorName(item))));
-    const thresholdEntry = Object.entries(creatorMilestoneConfig.creator_thresholds)
-      .find(([name]) => userKeys.has(normalizeKey(name)));
-    const thresholds = thresholdEntry?.[1] || creatorMilestoneConfig.fallback_thresholds;
-    const toPoints = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
-    const totalPoints = toPoints(creator?.creator_points) + toPoints(creator?.team_points);
+    const creator = creators.find((item) =>
+      userKeys.has(normalizeKey(getCreatorName(item))),
+    );
+    const thresholdEntry = Object.entries(
+      creatorMilestoneConfig.creator_thresholds,
+    ).find(([name]) => userKeys.has(normalizeKey(name)));
+    const thresholds =
+      thresholdEntry?.[1] || creatorMilestoneConfig.fallback_thresholds;
+    const toPoints = (value) =>
+      Number.isFinite(Number(value)) ? Number(value) : 0;
+    const totalPoints =
+      toPoints(creator?.creator_points) + toPoints(creator?.team_points);
     const monopolyThreshold = thresholds[thresholds.length - 1];
-    const progress = Math.min(100, Math.max(0, totalPoints / monopolyThreshold * 100));
-    const nextTierIndex = thresholds.findIndex((threshold) => totalPoints < threshold);
-    const targetThreshold = nextTierIndex === -1 ? monopolyThreshold : thresholds[nextTierIndex];
+    const progress = Math.min(
+      100,
+      Math.max(0, (totalPoints / monopolyThreshold) * 100),
+    );
+    const nextTierIndex = thresholds.findIndex(
+      (threshold) => totalPoints < threshold,
+    );
+    const targetThreshold =
+      nextTierIndex === -1 ? monopolyThreshold : thresholds[nextTierIndex];
     const remainingPoints = Math.max(0, targetThreshold - totalPoints);
 
-    document.querySelectorAll(".milestn-step-txt-yell").forEach((yell, index) => {
-      const threshold = thresholds[index] ?? creatorMilestoneConfig.fallback_thresholds[index] ?? 0;
-      yell.textContent = `${numbers.format(threshold)} pts`;
-    });
+    document
+      .querySelectorAll(".milestn-step-txt-yell")
+      .forEach((yell, index) => {
+        const threshold =
+          thresholds[index] ??
+          creatorMilestoneConfig.fallback_thresholds[index] ??
+          0;
+        yell.textContent = `${numbers.format(threshold)} pts`;
+      });
 
-    document.querySelectorAll(".milestn-step-ftr-head-txt").forEach((heading) => {
-      heading.textContent = !creator
-        ? "Milestones unavailable"
-        : nextTierIndex === -1
-          ? "All tiers reached"
-          : `Next up: ${creatorMilestoneConfig.tiers[nextTierIndex]}`;
-    });
+    document
+      .querySelectorAll(".milestn-step-ftr-head-txt")
+      .forEach((heading) => {
+        heading.textContent = !creator
+          ? "Milestones unavailable"
+          : nextTierIndex === -1
+            ? "All tiers reached"
+            : `Next up: ${creatorMilestoneConfig.tiers[nextTierIndex]}`;
+      });
 
     document.querySelectorAll(".milestn-step-count").forEach((count) => {
       count.textContent = creator
@@ -581,15 +678,24 @@ document.addEventListener("DOMContentLoaded", () => {
       state.hasData = Boolean(creator);
       state.target = progress;
       state.render = (displayedProgress) => {
-        state.section.querySelectorAll(".milestn-step-prgs-count").forEach((bar) => {
-          bar.style.width = `${displayedProgress}%`;
-        });
-        state.section.querySelectorAll(".milestn-step-each-items").forEach((item, index) => {
-          const reached = Boolean(creator) && totalPoints >= thresholds[index]
-            && displayedProgress >= thresholds[index] / monopolyThreshold * 100;
-          item.classList.toggle("active", reached);
-          item.classList.toggle("inactive", !reached);
-        });
+        state.section
+          .querySelectorAll(".milestn-step-prgs-count")
+          .forEach((bar) => {
+            bar.style.width = `${displayedProgress}%`;
+          });
+        state.section
+          .querySelectorAll(".milestn-step-each-items")
+          .forEach((item, index) => {
+            const reached =
+              Boolean(creator) &&
+              totalPoints >= thresholds[index] &&
+              displayedProgress >=
+                (thresholds[index] / monopolyThreshold) * 100;
+            item.classList.toggle("active", reached);
+            item.classList.toggle("inactive", !reached);
+            const status = item.querySelector(".milestn-step-txt-grn");
+            if (status) status.textContent = reached ? "Tier reached" : "Not reached yet";
+          });
       };
       state.render(state.progress);
       animateMilestones(state);
@@ -602,11 +708,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const profile = document.querySelector(".milestn-head-top-col.third");
     if (!profile) return;
 
-    const normalizeKey = (value) => normalizeUsername(value).replace(/[^a-z0-9]/g, "");
+    const normalizeKey = (value) =>
+      normalizeUsername(value).replace(/[^a-z0-9]/g, "");
     const userKey = normalizeKey(highlightedUser);
-    const team = staticMatchData.teams.find((item) =>
-      userKey && [item.creator_key, item.creator_name, ...item.creator_aliases, ...item.campaign_aliases]
-        .some((alias) => normalizeKey(alias) === userKey),
+    const team = staticMatchData.teams.find(
+      (item) =>
+        userKey &&
+        [
+          item.creator_key,
+          item.creator_name,
+          ...item.creator_aliases,
+          ...item.campaign_aliases,
+        ].some((alias) => normalizeKey(alias) === userKey),
     );
     const member = team?.campaign_member;
     const name = profile.querySelector(".cc-usr-name>div");
@@ -615,7 +728,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (image) {
       image.alt = member?.name || "";
       image.hidden = !member?.image_url;
-      image.onerror = () => { image.hidden = true; };
+      image.onerror = () => {
+        image.hidden = true;
+      };
       if (member?.image_url) image.src = member.image_url;
       else image.removeAttribute("src");
     }
@@ -629,6 +744,40 @@ document.addEventListener("DOMContentLoaded", () => {
     if (text !== undefined) node.textContent = text;
     return node;
   }
+
+  const rankTooltip = document.createElement("div");
+  rankTooltip.id = "ptl-body-tooltip";
+  rankTooltip.className = "ptl-body-tooltip";
+  rankTooltip.setAttribute("role", "tooltip");
+  rankTooltip.hidden = true;
+  document.body.append(rankTooltip);
+  let tooltipArrow = null;
+
+  function hideRankTooltip() {
+    tooltipArrow?.removeAttribute("aria-describedby");
+    tooltipArrow = null;
+    rankTooltip.hidden = true;
+  }
+
+  function showRankTooltip(arrow, message) {
+    hideRankTooltip();
+    tooltipArrow = arrow;
+    arrow.setAttribute("aria-describedby", rankTooltip.id);
+    rankTooltip.textContent = message;
+    rankTooltip.hidden = false;
+    const rect = arrow.getBoundingClientRect();
+    const width = rankTooltip.offsetWidth;
+    const left = Math.max(8, Math.min(rect.left + rect.width / 2 - width / 2, window.innerWidth - width - 8));
+    const top = rect.bottom + 8;
+    rankTooltip.style.left = `${left}px`;
+    rankTooltip.style.top = `${top}px`;
+  }
+
+  window.addEventListener("scroll", hideRankTooltip, true);
+  window.addEventListener("resize", hideRankTooltip);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") hideRankTooltip();
+  });
 
   function createRow(creator) {
     const rank = creator.rank ?? 0;
@@ -670,7 +819,7 @@ document.addEventListener("DOMContentLoaded", () => {
         : rawLabel;
 
     const row = element("creators-table-row");
-    if (highlightedUser && normalizeUsername(creatorName) === highlightedUser) {
+    if (highlightedUser && normalizeCreatorKey(creatorName) === normalizeCreatorKey(highlightedUser)) {
       row.classList.add("_1st-prize");
     }
     if (rank >= 1 && rank <= 4) row.classList.add("runners-up");
@@ -685,7 +834,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.append(column);
     }
 
-    const rankLabel = element("creators-table-box-rank", rank);
+    const rankLabel = element("creators-table-box-rank clr", rank);
     if (medals[rank]) {
       const medal = document.createElement("img");
       medal.src = medals[rank];
@@ -695,10 +844,50 @@ document.addEventListener("DOMContentLoaded", () => {
       medal.height = 24;
       rankLabel.prepend(medal);
     }
+    const hasRankChange = [creator.previous_rank, creator.rank].every(
+      (value) => value != null && String(value).trim() !== "" && Number.isFinite(Number(value)),
+    );
+    if (hasRankChange) {
+      const change = Number(creator.previous_rank) - Number(creator.rank);
+      const direction = change > 0 ? "up" : "down";
+      const message = change === 0
+        ? "Rank unchanged"
+        : direction === "up"
+          ? `Rank increased by +${numbers.format(Math.abs(change))}`
+          : `Rank decreased by -${numbers.format(Math.abs(change))}`;
+      const arrow = document.createElement("span");
+      arrow.className = `ptl-rank-arr ${direction}`;
+      arrow.innerHTML = direction === "up"
+        ? '<svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><path d="M5 1.5L9 7.5H1L5 1.5Z"></path></svg>'
+        : '<svg width="9" height="9" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><path d="M5 8.5L1 2.5H9L5 8.5Z"></path></svg>';
+      arrow.setAttribute("role", "img");
+      arrow.setAttribute("aria-label", `Rank ${direction}`);
+      arrow.tabIndex = 0;
+      arrow.addEventListener("mouseenter", () => showRankTooltip(arrow, message));
+      arrow.addEventListener("mouseleave", hideRankTooltip);
+      arrow.addEventListener("focus", () => showRankTooltip(arrow, message));
+      arrow.addEventListener("blur", hideRankTooltip);
+      rankLabel.append(arrow);
+    }
     cell("rank", rankLabel);
+    const creatorNameElement = element("creators-table-box-txt", creatorName);
+    if (creatorsTableConfig.popup.enabled) {
+      creatorNameElement.classList.add("creator-popup-trigger");
+      creatorNameElement.setAttribute("role", "button");
+      creatorNameElement.setAttribute("tabindex", "0");
+      creatorNameElement.setAttribute("aria-haspopup", "dialog");
+      const openDetails = () => window.PTLCreatorPopup.open(creator);
+      creatorNameElement.addEventListener("click", openDetails);
+      creatorNameElement.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openDetails();
+        }
+      });
+    }
     cell(
       "creators",
-      element("creators-table-box-txt", creatorName),
+      creatorNameElement,
       element("creators-table-box-count", `${supportersCount} supporters`),
     );
     cell(
@@ -732,6 +921,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function loadCreators() {
     if (isLoading) return;
+    hideRankTooltip();
     isLoading = true;
     if (refreshButton) refreshButton.disabled = true;
     tableBody.setAttribute("aria-busy", "true");
@@ -799,3 +989,885 @@ document.addEventListener("DOMContentLoaded", () => {
   refreshButton?.addEventListener("click", loadCreators);
   loadCreators();
 });
+
+
+/* Creator details popup */
+(() => {
+const PTL_CONFIG = {
+  get fallbackImageUrl() { return creatorsTableConfig.popup.fallbackImageUrl; },
+  apis: { 2: {
+    id: "creator_league_2",
+    get name() { return creatorsTableConfig.popup.leagueName; },
+    get use_api() { return creatorsTableConfig.popup.use_api; },
+  } },
+};
+function isModalEnabledForTab() { return creatorsTableConfig.popup.enabled; }
+/* PIECE 0 */
+const TraderDetailModal = {
+  popupSelector: ".pricing-popup-main:not(.creator-popup-main)",
+  popupClass: "pricing-popup-main",
+  generateMatchRows: function (matchHistory, leagueId) {
+    if (
+      !matchHistory ||
+      !Array.isArray(matchHistory) ||
+      matchHistory.length === 0
+    ) {
+      return "";
+    }
+
+    return matchHistory
+      .map((m, idx) => {
+        const matchNum =
+          typeof m.match === "number"
+            ? `M${m.match}`
+            : m.match || `M${idx + 1}`;
+        const oppName = m.opponent || "Opponent";
+        const oppColor =
+          m.color ||
+          (idx === 0
+            ? "blue"
+            : idx === 1
+              ? "purple"
+              : idx === 2
+                ? "pink"
+                : idx === 3
+                  ? "green"
+                  : idx === 4
+                    ? "yellow"
+                    : "burgundy");
+
+        let resultClass = "";
+        let resultText = m.result_label || m.result || "Won";
+        const resLower = String(m.result || "").toLowerCase();
+
+        const isInProgress =
+          resLower.includes("progress") || resLower === "in_progress";
+
+        if (isInProgress) {
+          resultClass = "";
+          resultText = "• In progress";
+        } else if (resLower === "won" || resLower === "win") {
+          resultClass = "won";
+          resultText = "Won";
+        } else if (resLower === "lost" || resLower === "loss") {
+          resultClass = "lost";
+          resultText = "Lost";
+        } else if (resLower === "draw" || resLower === "drawn") {
+          resultClass = "drawn";
+          resultText = "Draw";
+        }
+
+        const userBalRaw =
+          m.user_final_balance !== undefined && m.user_final_balance !== null
+            ? m.user_final_balance
+            : m.user_balance !== undefined
+              ? m.user_balance
+              : 50000;
+        const userBalNum =
+          typeof userBalRaw === "number"
+            ? userBalRaw
+            : parseFloat(String(userBalRaw).replace(/[$,+]/g, "")) || 0;
+        const userBalPositive = userBalNum >= 0;
+        const userBal = `${userBalPositive ? "+" : "-"}$${Math.abs(
+          userBalNum,
+        ).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+
+        const oppBalRaw =
+          m.opponent_final_balance !== undefined &&
+          m.opponent_final_balance !== null
+            ? m.opponent_final_balance
+            : m.opponent_balance !== undefined
+              ? m.opponent_balance
+              : 50000;
+        const oppBalNum =
+          typeof oppBalRaw === "number"
+            ? oppBalRaw
+            : parseFloat(String(oppBalRaw).replace(/[$,+]/g, "")) || 0;
+        const oppBalPositive = oppBalNum >= 0;
+        const oppBal = `${oppBalPositive ? "+" : "-"}$${Math.abs(
+          oppBalNum,
+        ).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+        const compareBalances = ["open1", "open2", "creator_league_2"].includes(leagueId);
+        const userBalColor = compareBalances
+          ? userBalNum === oppBalNum
+            ? "#8b8582"
+            : userBalNum < oppBalNum ? "#ef4444" : "#03dc5d"
+          : userBalPositive ? "#03dc5d" : "#ef4444";
+        const oppBalColor = compareBalances
+          ? "#8b8582"
+          : oppBalPositive ? "#8b8582" : "#ab623e";
+        let ptsRaw =
+          m.points !== undefined && m.points !== null
+            ? m.points
+            : m.pts !== undefined && m.pts !== null
+              ? m.pts
+              : 0;
+        let ptsNum =
+          typeof ptsRaw === "number"
+            ? ptsRaw
+            : parseFloat(String(ptsRaw).replace(/[^\d.-]/g, ""));
+        if (isNaN(ptsNum)) ptsNum = 0;
+        const ptsPositive = ptsNum >= 0;
+        let pts;
+        if (
+          typeof ptsRaw === "string" &&
+          (ptsRaw.toLowerCase().includes("pts") ||
+            ptsRaw.toLowerCase().includes("pt"))
+        ) {
+          pts = ptsRaw;
+        } else {
+          pts = `${ptsPositive ? "+" : ""}${ptsNum} pts`;
+        }
+
+        return `
+<div class="creators-table-row track-tb-row ${isInProgress ? "is-in-progress in-progress" : ""}">
+<div class="creators-table-col match"><div class="creators-table-box track-table"><div class="creators-table-box-rank gray-col">${escapeHtml(matchNum)}</div></div></div>
+<div class="creators-table-col opponent"><div class="creators-table-box track-table"><div class="oppnt-box"><div class="oppnt-crcl ${oppColor}"></div><div class="creators-table-box-count track-table">${escapeHtml(oppName)}</div></div></div></div>
+<div class="creators-table-col result"><div class="creators-table-box track-table"><div class="in-progs ${resultClass}"><div class="in-progs-txt">${escapeHtml(resultText)}</div></div></div></div>
+<div class="creators-table-col finals"><div class="creators-table-box track-table rgt"><div class="creators-table-box-count fnl-track-table"><span class="fnl-bal-left" style="color: ${userBalColor};">${escapeHtml(userBal)}</span> <span class="fnl-bal-left-mid">vs</span> <span class="fnl-bal-rgt" style="color: ${oppBalColor};">${escapeHtml(oppBal)}</span></div></div></div>
+<div class="creators-table-col final-points"><div class="creators-table-box track-table rgt"><div class="creators-table-box-count points-track-table ${!ptsPositive ? "red" : ""}" style="${!ptsPositive ? "color: #ef4444;" : ""}">${escapeHtml(pts)}</div></div></div>
+</div>
+`;
+      })
+      .join("");
+  },
+
+  renderLoading: function () {
+    return `
+<div class="pricing-popup-wrp" style="min-width: 360px; max-width: 500px; margin: 0 auto;">
+<div class="pricing-popup-top" style="display: flex; justify-content: flex-end; padding-bottom: 0;">
+<div class="pricing-popup-top-rgt">
+<div class="plt-close-btn" title="Close modal">
+<img src="https://cdn.prod.website-files.com/679b064a680c614548672a06/6aabe63ef90ae5b44195b877_cross-ico.svg" loading="lazy" alt="Close" class="plt-close-btn-ico">
+</div>
+</div>
+</div>
+<div class="pricing-popup-loading-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin: 0 auto; width: 100%; min-height: 240px; box-sizing: border-box;">
+<div class="ptl-spinner" style="margin: 0 auto 16px;"></div>
+<div class="loading-text" style="text-align: center; width: 100%;">Loading trader details...</div>
+</div>
+</div>
+`;
+  },
+
+  renderError: function (message) {
+    return `
+<div class="pricing-popup-wrp" style="min-width: 360px; max-width: 500px; margin: 0 auto;">
+<div class="pricing-popup-top" style="display: flex; justify-content: flex-end; padding-bottom: 0;">
+<div class="pricing-popup-top-rgt">
+<div class="plt-close-btn" title="Close modal">
+<img src="https://cdn.prod.website-files.com/679b064a680c614548672a06/6aabe63ef90ae5b44195b877_cross-ico.svg" loading="lazy" alt="Close" class="plt-close-btn-ico">
+</div>
+</div>
+</div>
+<div class="pricing-popup-error-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin: 0 auto; width: 100%; min-height: 240px; box-sizing: border-box;">
+<div class="pricing-popup-error-title" style="text-align: center; width: 100%;">Failed to load trader details</div>
+<div class="pricing-popup-error-desc" style="text-align: center; width: 100%;">${escapeHtml(message || "Unable to connect to leaderboard service.")}</div>
+<button type="button" class="pricing-popup-retry-btn" style="margin: 6px auto 0;">Retry</button>
+</div>
+</div>
+`;
+  },
+
+  render: function (data, tabIndex, fallbackItem, creator = false) {
+    const apiConfig = PTL_CONFIG.apis[tabIndex] || {
+      name: "Open 1",
+    };
+
+    const payload = data && typeof data === "object" ? data : {};
+    const user = payload.user || payload.data || fallbackItem || {};
+    const currentMatch = payload.current_match || {};
+    const matchHistory = payload.match_history || [];
+
+    const rawTraderName =
+      user.username ||
+      user.display_handle ||
+      user.creator ||
+      user.full_name ||
+      user.trader_name ||
+      user.name ||
+      (fallbackItem &&
+        (fallbackItem.display_handle ||
+          fallbackItem.username ||
+          fallbackItem.name)) ||
+      "Trader";
+    const traderName = rawTraderName ? String(rawTraderName).trim() : "Trader";
+    const rankNum =
+      user.rank !== undefined && user.rank !== null
+        ? user.rank
+        : fallbackItem &&
+            fallbackItem.rank !== undefined &&
+            fallbackItem.rank !== null
+          ? fallbackItem.rank
+          : 1;
+    const leagueName = apiConfig.name || "Open 1";
+    const countryName =
+      user.country && user.country.name
+        ? user.country.name
+        : typeof user.country === "string"
+          ? user.country
+          : "";
+    // Company belongs to the clicked leaderboard row, not the details response.
+    const companySource = fallbackItem || {};
+    const companyName = getCompanyName(companySource);
+    const companyLogo = getProfileImageUrl(
+      companySource.company?.image_url,
+      companySource.company_image_url,
+    );
+    const isFinale =
+      user.status === "finale" ||
+      user.status === "in_finale_position" ||
+      (user.status_label &&
+        String(user.status_label).toLowerCase().includes("finale")) ||
+      (creator
+        ? user.reward?.finale_seat === true
+        : typeof rankNum === "number" && rankNum <= 4);
+    const creatorRank = Number(user.rank ?? fallbackItem?.rank);
+    const showPopupTag =
+      !creator ||
+      (Number.isInteger(creatorRank) && creatorRank >= 1 && creatorRank < 9);
+    const finaleTagText = creator
+      ? `${creatorRank}${{ 1: "st", 2: "nd", 3: "rd" }[creatorRank] || "th"} place`
+      : user.status_label ||
+        (isFinale ? "In Finale position" : `${leagueName} Leaderboard`);
+
+    // 5 Stat Cards
+    const pointsVal =
+      user.points !== undefined && user.points !== null
+        ? user.points
+        : fallbackItem && fallbackItem.points !== undefined
+          ? fallbackItem.points
+          : 0;
+    const pointsNum =
+      typeof pointsVal === "number"
+        ? pointsVal
+        : parseFloat(String(pointsVal).replace(/[^\d.-]/g, "")) || 0;
+    const pointsPositive = pointsNum >= 0;
+    const pointsDisplay =
+      pointsVal == null
+        ? "0 pts"
+        : typeof pointsVal === "string" &&
+            (pointsVal.includes("pts") || pointsVal.includes("pt"))
+          ? pointsVal
+          : `${pointsVal} pts`;
+    const recordDisplay =
+      user.record && user.record.display
+        ? user.record.display
+        : user.record_label ||
+          (user.record &&
+            `${user.record.wins || 0}W · ${user.record.draws || 0}D · ${user.record.losses || 0}L`) ||
+          "-";
+
+    const rawPnl =
+      user.total_pnl !== undefined && user.total_pnl !== null
+        ? user.total_pnl
+        : fallbackItem && fallbackItem.total_pnl !== undefined
+          ? fallbackItem.total_pnl
+          : 0;
+    const numericPnl =
+      typeof rawPnl === "number"
+        ? rawPnl
+        : parseFloat(String(rawPnl).replace(/[$,+]/g, "")) || 0;
+    const pnlPositive = numericPnl >= 0;
+    const pnlFormatted = `${pnlPositive ? "+" : "-"}$${Math.abs(
+      numericPnl,
+    ).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
+    const matchesPlayed =
+      user.matches_played !== undefined && user.matches_played !== null
+        ? user.matches_played
+        : fallbackItem && fallbackItem.matches_played !== undefined
+          ? fallbackItem.matches_played
+          : 0;
+    const totalMatches = user.total_matches || currentMatch.total_matches || 8;
+    const remainingMatches = Math.max(0, totalMatches - matchesPlayed);
+
+    // Live Match Data
+    const curMatchNum =
+      currentMatch.match_number ||
+      (matchesPlayed + 1 > totalMatches ? totalMatches : matchesPlayed + 1) ||
+      1;
+    const curTotalMatches = currentMatch.total_matches || totalMatches || 8;
+
+    const rawStatusLabel = currentMatch.status_label || "";
+    const isLive = String(rawStatusLabel).trim().toLowerCase() === "live";
+    const liveMatchHeaderHTML = isLive
+      ? `
+<div class="live-match-wrp grn_clr">
+<div class="live-match-crcl"></div>
+<div class="live-match-txt">LIVE NOW · MATCH ${curMatchNum}${creator ? "" : ` OF ${curTotalMatches}`}</div>
+</div>
+`
+      : `
+<div class="live-match-wrp">
+<div class="live-match-txt">MATCH ${curMatchNum} OF ${curTotalMatches}</div>
+</div>
+`;
+
+    function getFlag(code) {
+      const raw = code && typeof code === "object" ? code.code : code;
+      const normalized = typeof raw === "string" ? raw.trim().toLowerCase() : "";
+      return /^[a-z]{2}$/.test(normalized)
+        ? `https://flagcdn.com/${normalized}.svg`
+        : PTL_CONFIG.fallbackImageUrl;
+    }
+
+    const matchUser = currentMatch.user || {};
+    const matchOpponent = currentMatch.opponent || {};
+
+    const youName = matchUser.username || traderName;
+    const youFlag = getFlag(matchUser.country || user.country);
+    const youCountryName =
+      (matchUser.country && matchUser.country.name) ||
+      countryName ||
+      "United States";
+    const youBalance =
+      matchUser.balance !== undefined && matchUser.balance !== null
+        ? Number(matchUser.balance)
+        : 50000;
+    const youBalancePositive = youBalance >= 0;
+    const youBalanceText = `${youBalancePositive ? "+" : "-"}$${Math.abs(
+      youBalance,
+    ).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+    const youPnl =
+      matchUser.pnl !== undefined && matchUser.pnl !== null
+        ? Number(matchUser.pnl)
+        : 0;
+    const youPnlPositive = youPnl >= 0;
+    const youPnlText = `${youPnlPositive ? "+" : "-"}$${Math.abs(
+      youPnl,
+    ).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
+    let youTradeBlockHTML = "";
+    if (matchUser.trades !== null && matchUser.trades !== undefined) {
+      const youTradesText =
+        matchUser.trades === 0
+          ? "No trade"
+          : matchUser.trades === 1
+            ? "1 trade"
+            : `${matchUser.trades} trades`;
+      youTradeBlockHTML = `
+<div class="ptl-live-trade-card-graph-dvd"></div>
+<div class="ptl-live-trade-card-graph-trade">
+<div class="ptl-live-trade-card-graph-trade-txt">${escapeHtml(youTradesText)}</div>
+</div>
+`;
+    }
+
+    const oppName = matchOpponent.username || "Opponent";
+    const oppFlag = getFlag(matchOpponent.country);
+    const oppCountryName =
+      (matchOpponent.country && matchOpponent.country.name) ||
+      "Opponent Country";
+    const oppBalance =
+      matchOpponent.balance !== undefined && matchOpponent.balance !== null
+        ? Number(matchOpponent.balance)
+        : 50000;
+    const oppBalancePositive = oppBalance >= 0;
+    const oppBalanceText = `${oppBalancePositive ? "+" : "-"}$${Math.abs(
+      oppBalance,
+    ).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+    const oppPnl =
+      matchOpponent.pnl !== undefined && matchOpponent.pnl !== null
+        ? Number(matchOpponent.pnl)
+        : 0;
+    const oppPnlPositive = oppPnl >= 0;
+    const oppPnlText = `${oppPnlPositive ? "+" : "-"}$${Math.abs(
+      oppPnl,
+    ).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
+    let oppTradeBlockHTML = "";
+    if (matchOpponent.trades !== null && matchOpponent.trades !== undefined) {
+      const oppTradesText =
+        matchOpponent.trades === 0
+          ? "No trade"
+          : matchOpponent.trades === 1
+            ? "1 trade"
+            : `${matchOpponent.trades} trades`;
+      oppTradeBlockHTML = `
+<div class="ptl-live-trade-card-graph-dvd"></div>
+<div class="ptl-live-trade-card-graph-trade">
+<div class="ptl-live-trade-card-graph-trade-txt">${escapeHtml(oppTradesText)}</div>
+</div>
+`;
+    }
+
+    const totalBalance = youBalance + oppBalance;
+    const rawPercent =
+      totalBalance > 0 ? (youBalance / totalBalance) * 100 : 50;
+    const progressPercent = Math.min(97, Math.max(3, rawPercent)).toFixed(2);
+    const pnlDiff = youPnl - oppPnl;
+    const isAhead = pnlDiff >= 0;
+    const leadAmount = Math.abs(pnlDiff);
+    const isZeroLead = Math.round(leadAmount) === 0;
+    const leadText = isAhead
+      ? `Player is ahead by $${Math.round(leadAmount).toLocaleString("en-US")} ▲`
+      : `Player is behind by $${Math.round(leadAmount).toLocaleString("en-US")} ▼`;
+    const leadClass = isAhead ? "is-lead green" : "is-behind red";
+
+    let leadBtnHTML = "";
+    if (!isZeroLead) {
+      leadBtnHTML = `
+<div class="ptl-live-trade-btn w-inline-block ${leadClass}">
+<div class="ptl-live-trade-btn-txt">${escapeHtml(leadText)}</div>
+</div>
+`;
+    }
+
+    const flagImgUrl = creator
+      ? getProfileImageUrl(user.image_url, user.company?.image_url)
+      : getFlag(user.country);
+    const flagHtml = `<img src="${escapeHtml(flagImgUrl)}" data-ptl-image-fallback loading="lazy" sizes="100vw" alt="${escapeHtml(countryName)}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+
+    const matchRowsHTML = this.generateMatchRows(matchHistory, apiConfig.id);
+
+    return `
+<div class="pricing-popup-wrp">
+<div class="pricing-popup-top">
+<div class="pricing-popup-top-left">
+<div class="pricing-popup-top-left-wrp">
+<div class="pricing-popup-top-pro">
+${flagHtml}
+</div>
+<div class="pricing-popup-top-left-cont">
+<div class="pricing-popup-top-left-head">
+  <div class="pricing-popup-top-left-cont-txt">${escapeHtml(traderName)}</div>
+  ${
+    showPopupTag
+      ? `<div class="creators-table-tag popup-tag${apiConfig.id === "open1" && isEliminated(user) ? " eleminated" : ""}">
+    <img loading="lazy" src="https://cdn.prod.website-files.com/679b064a680c614548672a06/6aabc95eb50f16dab6ba9304_yell-star.svg" alt="" class="creators-table-tag-ico">
+    <div class="creators-table-tag-txt">${escapeHtml(finaleTagText)}</div>
+  </div>`
+      : ""
+  }
+</div>
+<div class="pricing-popup-top-left-head-txt${companyName === "-" ? " no-team" : ""}">
+<span class="pricing-popup-team-label">Team:</span>
+${companyName !== "-" ? `
+<span class="pricing-popup-company">
+<img src="${escapeHtml(companyLogo)}" alt="" width="24" height="24" class="pricing-popup-company-logo" data-ptl-image-fallback>
+<span>${escapeHtml(companyName)}</span>
+</span>
+` : "No team"}
+</div>
+</div>
+</div>
+</div>
+<div class="pricing-popup-top-rgt">
+<div class="plt-close-btn" title="Close modal">
+<img src="https://cdn.prod.website-files.com/679b064a680c614548672a06/6aabe63ef90ae5b44195b877_cross-ico.svg" loading="lazy" alt="Close" class="plt-close-btn-ico">
+</div>
+</div>
+</div>
+
+<div class="pricing-popup-rank">
+<div class="pricing-popup-rank-row">
+<div class="pricing-popup-rank-col">
+<div class="pricing-popup-rank-card">
+<div class="pricing-popup-rank-num yellow">#${escapeHtml(rankNum)}</div>
+<div class="pricing-popup-rank-desc">${escapeHtml(leagueName)} rank</div>
+</div>
+</div>
+<div class="pricing-popup-rank-col"><div class="pricing-popup-stick"></div></div>
+<div class="pricing-popup-rank-col">
+<div class="pricing-popup-rank-card">
+<div class="pricing-popup-rank-num ${!pointsPositive ? "pts-negative" : ""}" style="${!pointsPositive ? "color: #f9cfcf;" : ""}">${escapeHtml(pointsDisplay)}</div>
+<div class="pricing-popup-rank-desc">Total points</div>
+</div>
+</div>
+<div class="pricing-popup-rank-col"><div class="pricing-popup-stick"></div></div>
+<div class="pricing-popup-rank-col">
+<div class="pricing-popup-rank-card">
+<div class="pricing-popup-rank-num">${escapeHtml(recordDisplay)}</div>
+<div class="pricing-popup-rank-desc">Track record</div>
+</div>
+</div>
+<div class="pricing-popup-rank-col"><div class="pricing-popup-stick"></div></div>
+<div class="pricing-popup-rank-col">
+<div class="pricing-popup-rank-card">
+<div class="pricing-popup-rank-num ${pnlPositive ? "green" : "#ef4444"}" style="color: ${pnlPositive ? "#03dc5d" : "#ef4444"};">${escapeHtml(pnlFormatted)}</div>
+<div class="pricing-popup-rank-desc">Total P&amp;L</div>
+</div>
+</div>
+<div class="pricing-popup-rank-col"><div class="pricing-popup-stick"></div></div>
+<div class="pricing-popup-rank-col">
+<div class="pricing-popup-rank-card">
+<div class="pricing-popup-rank-num">${escapeHtml(matchesPlayed)}${creator ? "" : ` of ${escapeHtml(totalMatches)}`}</div>
+<div class="pricing-popup-rank-desc">Matches played</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="live-match-wrp-body">
+${
+  creator && !payload.current_match
+    ? `<div class="live-match-wrp no-current-match"><div class="live-match-txt">No live match found.</div></div>`
+    : `
+${liveMatchHeaderHTML}
+<div class="ptl-live-trade-outr">
+<div class="ptl-live-trade">
+<img src="https://cdn.prod.website-files.com/679b064a680c614548672a06/6aabecd199ad59a0d3d56f12_ptl-live-bg.png" loading="lazy" sizes="100vw" alt="" class="ptl-live-trade-bg">
+<div class="ptl-live-trade-wrp">
+<div class="ptl-live-trade-row">
+  <div class="ptl-live-trade-col">
+    <div class="ptl-live-trade-card">
+      <div class="ptl-live-trade-card-top">
+        <div class="ptl-live-trade-card-cuntr-outr">
+          <div class="ptl-live-trade-card-cuntr">
+            <img src="${escapeHtml(youFlag)}" data-ptl-image-fallback loading="lazy" alt="${escapeHtml(youCountryName)}" class="ptl-live-trade-card-cuntr-flag" style="object-fit: cover;">
+          </div>
+        </div>
+        <div class="ptl-live-trade-card-top-cont">
+          <div class="ptl-live-trade-card-top-cont-txt">PLAYER</div>
+          <div class="ptl-live-trade-card-top-cont-name">${escapeHtml(youName)}</div>
+        </div>
+      </div>
+      <div class="ptl-live-trade-card-btm">
+        <div class="ptl-live-trade-card-btm-count ${youBalancePositive ? "" : "negative"}">${escapeHtml(youBalanceText)}</div>
+        <div class="ptl-live-trade-card-graph">
+          <div class="ptl-live-trade-card-graph-left" style="color: ${youPnlPositive ? "#03dc5d" : "#ef4444"};">
+            <img src="https://cdn.prod.website-files.com/679b064a680c614548672a06/6aabf283c9bbb30927f8ca81_grn-arr.png" loading="lazy" alt="" class="ptl-live-trade-card-graph-arr ${youPnlPositive ? "" : "is-down red"}" style="${youPnlPositive ? "" : "transform: rotate(180deg); filter: hue-rotate(-140deg) saturate(100%);"}">
+            <div class="ptl-live-trade-card-graph-txt" style="color: ${youPnlPositive ? "#03dc5d" : "#ef4444"};">${escapeHtml(youPnlText)}</div>
+          </div>
+          ${youTradeBlockHTML}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ptl-live-trade-col mid">
+    <img src="https://cdn.prod.website-files.com/679b064a680c614548672a06/6aabeec11976a225d8b717ca_vs-ico.png" loading="lazy" alt="" class="ptl-live-trade-mid-ico">
+  </div>
+  <div class="ptl-live-trade-col">
+    <div class="ptl-live-trade-card right">
+      <div class="ptl-live-trade-card-top right">
+        <div class="ptl-live-trade-card-top-cont">
+          <div class="ptl-live-trade-card-top-cont-txt">OPPONENT</div>
+          <div class="ptl-live-trade-card-top-cont-name">${escapeHtml(oppName)}</div>
+        </div>
+        <div class="ptl-live-trade-card-cuntr-outr right">
+          <div class="ptl-live-trade-card-cuntr">
+            <img src="${escapeHtml(oppFlag)}" data-ptl-image-fallback loading="lazy" alt="${escapeHtml(oppCountryName)}" class="ptl-live-trade-card-cuntr-flag" style="object-fit: cover;">
+          </div>
+        </div>
+      </div>
+      <div class="ptl-live-trade-card-btm">
+        <div class="ptl-live-trade-card-btm-count ${oppBalancePositive ? "" : "negative"}">${escapeHtml(oppBalanceText)}</div>
+        <div class="ptl-live-trade-card-graph right">
+          <div class="ptl-live-trade-card-graph-left" style="color: ${oppPnlPositive ? "#03dc5d" : "#ef4444"};">
+            <img src="https://cdn.prod.website-files.com/679b064a680c614548672a06/6aabf283c9bbb30927f8ca81_grn-arr.png" loading="lazy" alt="" class="ptl-live-trade-card-graph-arr ${oppPnlPositive ? "" : "is-down red"}" style="${oppPnlPositive ? "" : "transform: rotate(180deg); filter: invert(38%) sepia(86%) saturate(2883%) hue-rotate(338deg) brightness(99%) contrast(92%);"}">
+            <div class="ptl-live-trade-card-graph-txt" style="color: ${oppPnlPositive ? "#03dc5d" : "#ef4444"};">${escapeHtml(oppPnlText)}</div>
+          </div>
+          ${oppTradeBlockHTML}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="ptl-live-trade-prgs"><div class="ptl-live-trade-prgs-inn"><div class="ptl-live-trade-prgs-wrp" style="width: ${progressPercent}%;"><div class="ptl-live-trade-prgs-skick"></div></div></div></div>
+<div class="ptl-live-trade-btn-wrp">
+  ${leadBtnHTML}
+  <div class="ptl-live-trade-btm-txt" style="display: none;">Updated 2 hours 30 mins ago • Updates in 2 hours 12 mins</div>
+</div>
+</div>
+</div>
+</div>
+
+`
+}
+<div class="track-record-main">
+<div class="live-match-table-head">
+<div class="live-match-table-head-left">TRACK RECORD · MATCH HISTORY</div>
+${creator ? "" : `<div class="live-match-table-head-left rgt">${escapeHtml(leagueName)} · ${matchesPlayed} played, ${remainingMatches} remaining</div>`}
+</div>
+<div class="creators-table-main">
+<div class="creators-table">
+<div class="creators-table-head track-trable">
+  <div class="creators-table-row">
+    <div class="creators-table-col match"><div class="creators-table-box head track-table"><div class="creators-table-box-txt">Match</div></div></div>
+    <div class="creators-table-col opponent"><div class="creators-table-box head track-table"><div class="creators-table-box-txt">Opponent</div></div></div>
+    <div class="creators-table-col result"><div class="creators-table-box head track-table"><div class="creators-table-box-txt">Result</div></div></div>
+    <div class="creators-table-col finals"><div class="creators-table-box head track-table rgt"><div class="creators-table-box-txt">Final balance</div></div></div>
+    <div class="creators-table-col final-points"><div class="creators-table-box head track-table rgt"><div class="creators-table-box-txt">Points</div></div></div>
+  </div>
+</div>
+<div class="creators-table-body track-tbl-bd">
+  ${matchRowsHTML || '<div class="empty-state-text creator-empty-state-msg">No match history available.</div>'}
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+`;
+  },
+
+  open: async function (item, tabIndex, customUserId) {
+    if (!item && !customUserId) return;
+    if (!isModalEnabledForTab(tabIndex)) return;
+    if (this === TraderDetailModal) CreatorDetailModal.close();
+
+    let popup = document.querySelector(this.popupSelector);
+    if (!popup) {
+      popup = document.createElement("div");
+      popup.className = this.popupClass;
+      popup.setAttribute("role", "dialog");
+      popup.setAttribute("aria-modal", "true");
+      popup.setAttribute("aria-label", this.dialogLabel || "Trader details");
+      document.body.appendChild(popup);
+    }
+
+    const requestId = (this.requestId = (this.requestId || 0) + 1);
+    popup.innerHTML = this.renderLoading();
+    popup.classList.remove("is-hidden");
+    popup.classList.add("is-open");
+    document.body.classList.add("ptl-modal-open");
+    this.bindEvents(popup, item, tabIndex, customUserId);
+
+    const apiConfig = PTL_CONFIG.apis[tabIndex] || {};
+    const userId =
+      customUserId ||
+      (item &&
+        (item.user_id !== undefined && item.user_id !== null
+          ? item.user_id
+          : item.userId !== undefined && item.userId !== null
+            ? item.userId
+            : item.id));
+
+    const baseUrl = creatorsTableConfig.detailsEndpoint.trim();
+    if (this === CreatorDetailModal && isApiEnabled(apiConfig) && !userId) {
+      popup.innerHTML = this.renderError(
+        "This creator has no user ID available.",
+      );
+      this.bindEvents(popup, item, tabIndex, userId);
+      return;
+    }
+    if (isApiEnabled(apiConfig) && baseUrl && userId) {
+      try {
+        const detailsUrl = `${baseUrl}?user_id=${encodeURIComponent(userId)}`;
+        console.log(
+          "[PTL Leaderboard] Fetching trader details endpoint:",
+          detailsUrl,
+        );
+
+        const response = await fetch(detailsUrl, {
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `HTTP ${response.status}: Failed to load trader details`,
+          );
+        }
+
+        const json = await response.json();
+        if (json && json.success === false) {
+          throw new Error(
+            json.message || json.error || "Failed to load trader details",
+          );
+        }
+
+        if (requestId !== this.requestId) return;
+        popup.innerHTML = this.render(json, tabIndex, item);
+        this.bindEvents(popup, item, tabIndex, userId);
+      } catch (err) {
+        if (requestId !== this.requestId) return;
+        console.error("[PTL Modal] Error fetching trader details:", err);
+        popup.innerHTML = this.renderError(
+          err.message || "Unable to connect to leaderboard service.",
+        );
+        this.bindEvents(popup, item, tabIndex, userId);
+      }
+    } else {
+      let demoData =
+        apiConfig.demo_individual_data ||
+        (typeof PTL_DEMO_DATA !== "undefined"
+          ? PTL_DEMO_DATA.creator_league_2_individual_data
+          : null);
+      if (this === CreatorDetailModal) demoData = { user: item };
+      popup.innerHTML = this.render(demoData, tabIndex, item);
+      this.bindEvents(popup, item, tabIndex, userId);
+    }
+  },
+
+  bindEvents: function (popup, item, tabIndex, userId) {
+    if (!popup) return;
+    const closeBtns = popup.querySelectorAll(".plt-close-btn");
+    closeBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.close();
+      });
+    });
+
+    const retryBtn = popup.querySelector(".pricing-popup-retry-btn");
+    if (retryBtn) {
+      retryBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.open(item, tabIndex, userId);
+      });
+    }
+
+    popup.onclick = (e) => {
+      if (e.target === popup) {
+        this.close();
+      }
+    };
+  },
+
+  close: function () {
+    this.requestId = (this.requestId || 0) + 1;
+    const popup = document.querySelector(this.popupSelector);
+    if (popup) {
+      popup.classList.remove("is-open");
+      popup.classList.add("is-hidden");
+      document.body.classList.remove("ptl-modal-open");
+    }
+  },
+
+  init: function () {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        const popup = document.querySelector(this.popupSelector);
+        if (popup && popup.classList.contains("is-open")) {
+          this.close();
+        }
+      }
+    });
+  },
+};
+
+
+const CreatorDetailModal = {
+  ...TraderDetailModal,
+  popupSelector: ".creator-popup-main",
+  popupClass: "pricing-popup-main creator-popup-main",
+  dialogLabel: "Creator details",
+  open: function (item, tabIndex = 2, userId) {
+    TraderDetailModal.close();
+    return TraderDetailModal.open.call(this, item, 2, userId);
+  },
+  renderLoading: function () {
+    return TraderDetailModal.renderLoading().replace(
+      "Loading trader details",
+      "Loading creator details",
+    );
+  },
+  renderError: function (message) {
+    return TraderDetailModal.renderError(message).replace(
+      "Failed to load trader details",
+      "Failed to load creator details",
+    );
+  },
+  render: function (response, tabIndex, fallbackItem) {
+    const payload = response?.data || response || {};
+    const user = { ...fallbackItem, ...payload.user };
+    user.username = user.display_handle || user.username || user.full_name;
+    user.total_matches = user.total_game_days ?? payload.total_game_days;
+    const normalized = {
+      ...payload,
+      user,
+      match_history: (payload.match_history || []).map((match) => ({
+        ...match,
+        match: match.game_day != null ? `Day ${match.game_day}` : match.match,
+      })),
+    };
+    return TraderDetailModal.render.call(
+      this,
+      normalized,
+      2,
+      fallbackItem,
+      true,
+    );
+  },
+};
+
+function getCompanyName(item) {
+  const sources = [
+    typeof item.company === "string" ? item.company : item.company?.name,
+    item.company_name,
+  ];
+  return sources.find((name) =>
+    typeof name === "string" && name.trim() &&
+    !["-", "not_found", "null", "undefined"].includes(name.trim().toLowerCase())
+  )?.trim() || "-";
+}
+
+function getProfileImageUrl(...sources) {
+  return sources.find((source) =>
+    typeof source === "string" && source.trim() &&
+    !["not_found", "null", "undefined"].includes(source.trim().toLowerCase())
+  )?.trim() || PTL_CONFIG.fallbackImageUrl;
+}
+
+function initImageFallbacks() {
+  document.addEventListener("error", (event) => {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement) ||
+        !image.hasAttribute("data-ptl-image-fallback") ||
+        !image.closest(".creator-popup-main")) return;
+    // Remove the marker first so a failed fallback cannot trigger a retry loop.
+    image.removeAttribute("data-ptl-image-fallback");
+    if (image.getAttribute("src") !== PTL_CONFIG.fallbackImageUrl) {
+      image.src = PTL_CONFIG.fallbackImageUrl;
+    }
+  }, true);
+}
+
+function isApiEnabled(apiConfig) {
+  if (!apiConfig) return Boolean(PTL_CONFIG.use_api !== false);
+  if (apiConfig.use_api !== undefined) return Boolean(apiConfig.use_api);
+  if (apiConfig.is_live !== undefined) return Boolean(apiConfig.is_live);
+  if (PTL_CONFIG.use_api !== undefined) return Boolean(PTL_CONFIG.use_api);
+  return true;
+}
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function isEliminated(item) {
+  return (
+    String(item?.status || "")
+      .trim()
+      .toLowerCase() === "eliminated"
+  );
+}
+
+
+  window.PTLCreatorPopup = {
+    open: (creator, userId) => CreatorDetailModal.open(creator, 2, userId),
+    close: () => CreatorDetailModal.close(),
+  };
+  CreatorDetailModal.init();
+  initImageFallbacks();
+})();
